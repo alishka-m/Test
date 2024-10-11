@@ -12,3 +12,5 @@ async def sql_create():
 
     async def sql_insert_store(name, size, price, photo):
         cursor.execute(queries.INSERT_STORE_QUERY)
+
+##tesssssst
