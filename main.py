@@ -1,23 +1,23 @@
 from aiogram import executor
 import logging
-from config import dp, bot,Admins
-from handlers import coomands, quiz, FSM_store, FSM_reg,echo
-
+from config import dp
+from handlers import commands, echo, quiz, geme, FSM_reg, FSM_store, sande_products
 from db import db_main
-async def on_startup(_):
-    for admin in Admins:
-        await bot.send_message(chat_id=admin,
-                               text='Бот включен!')
 
+async def on_startup(_):
     await db_main.sql_create()
 
-quiz.register_handler_quiz(dp)
-coomands.register_handlers_commands(dp)
-FSM_reg.register_handlers_registration(dp)
-FSM_store.store_handler_storing(dp)
+FSM_store.register_store_handlers(dp) # регистрируем обработчики
+commands.register_handlers_commands(dp)
+quiz.register_handlers_quiz(dp)
+FSM_reg.register_fsm_handlers(dp)
+geme.register_game_handlers(dp)
+sande_products.register_send_products_handler(dp)
 
-echo.register_handlers_echo()
+echo.register_handler_echo(dp)
 
-if __name__ == '__main__':
+
+if __name__=='__main__':
     logging.basicConfig(level=logging.INFO)
-    executor.start_polling(dp, skip_updates=True)
+    executor.start_polling(dp, skip_updates=True, on_startup=on_startup,
+                               allowed_updates=['callback'])
